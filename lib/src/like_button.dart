@@ -10,34 +10,35 @@ import 'package:like_button/src/utils/like_button_typedef.dart';
 import 'package:like_button/src/utils/like_button_util.dart';
 
 class LikeButton extends StatefulWidget {
-  const LikeButton(
-      {Key key,
-      this.size = 30.0,
-      this.likeBuilder,
-      this.countBuilder,
-      double bubblesSize,
-      double circleSize,
-      this.likeCount,
-      this.isLiked = false,
-      this.mainAxisAlignment = MainAxisAlignment.center,
-      this.crossAxisAlignment = CrossAxisAlignment.center,
-      this.animationDuration = const Duration(milliseconds: 1000),
-      this.likeCountAnimationType = LikeCountAnimationType.part,
-      this.likeCountAnimationDuration = const Duration(milliseconds: 500),
-      this.likeCountPadding = const EdgeInsets.only(left: 3.0),
-      this.bubblesColor = const BubblesColor(
-        dotPrimaryColor: Color(0xFFFFC107),
-        dotSecondaryColor: Color(0xFFFF9800),
-        dotThirdColor: Color(0xFFFF5722),
-        dotLastColor: Color(0xFFF44336),
-      ),
-      this.circleColor =
-          const CircleColor(start: Color(0xFFFF5722), end: Color(0xFFFFC107)),
-      this.onTap,
-      this.countPostion = CountPostion.right,
-      this.padding,
-      this.countDecoration})
-      : assert(size != null),
+  const LikeButton({
+    Key key,
+    this.size = 30.0,
+    this.likeBuilder,
+    this.countBuilder,
+    double bubblesSize,
+    double circleSize,
+    this.likeCount,
+    this.isLiked = false,
+    this.mainAxisAlignment = MainAxisAlignment.center,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.animationDuration = const Duration(milliseconds: 1000),
+    this.likeCountAnimationType = LikeCountAnimationType.part,
+    this.likeCountAnimationDuration = const Duration(milliseconds: 500),
+    this.likeCountPadding = const EdgeInsets.only(left: 3.0),
+    this.bubblesColor = const BubblesColor(
+      dotPrimaryColor: Color(0xFFFFC107),
+      dotSecondaryColor: Color(0xFFFF9800),
+      dotThirdColor: Color(0xFFFF5722),
+      dotLastColor: Color(0xFFF44336),
+    ),
+    this.circleColor =
+        const CircleColor(start: Color(0xFFFF5722), end: Color(0xFFFFC107)),
+    this.onTap,
+    this.countPostion = CountPostion.right,
+    this.padding,
+    this.countDecoration,
+    this.tapController,
+  })  : assert(size != null),
         assert(animationDuration != null),
         assert(circleColor != null),
         assert(bubblesColor != null),
@@ -109,6 +110,10 @@ class LikeButton extends StatefulWidget {
 
   ///return count widget with decoration
   final CountDecoration countDecoration;
+
+  ///let the outside control the click event
+  final TapController tapController;
+
   @override
   State<StatefulWidget> createState() => LikeButtonState();
 }
@@ -127,6 +132,7 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
   bool _isLiked = false;
   int _likeCount;
   int _preLikeCount;
+
   @override
   void initState() {
     super.initState();
@@ -138,7 +144,7 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
         AnimationController(duration: widget.animationDuration, vsync: this);
     _likeCountController = AnimationController(
         duration: widget.likeCountAnimationDuration, vsync: this);
-
+    widget.tapController?._onTap = onTap;
     _initAnimations();
   }
 
@@ -164,6 +170,8 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
 
     super.didUpdateWidget(oldWidget);
   }
+
+
 
   @override
   void dispose() {
@@ -528,4 +536,14 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
       ),
     );
   }
+}
+
+class TapController {
+  VoidCallback _onTap;
+
+  void dispose() {
+    _onTap = null;
+  }
+
+  void tap() => _onTap?.call();
 }
