@@ -144,7 +144,6 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
         AnimationController(duration: widget.animationDuration, vsync: this);
     _likeCountController = AnimationController(
         duration: widget.likeCountAnimationDuration, vsync: this);
-    widget.tapController?._onTap = onTap;
     _initAnimations();
   }
 
@@ -182,6 +181,7 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    widget.tapController?._onTap ??= onTap;
     Widget likeCountWidget = _getLikeCountWidget();
     if (widget.countDecoration != null) {
       likeCountWidget = widget.countDecoration(likeCountWidget, _likeCount) ??
