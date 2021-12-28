@@ -104,7 +104,7 @@ class LikeButton extends StatefulWidget {
   final CountDecoration? countDecoration;
 
   ///let the outside control the click event
-  final TapController tapController;
+  final TapController? tapController;
   @override
   State<StatefulWidget> createState() => LikeButtonState();
 }
@@ -532,7 +532,7 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
 }
 
 class TapController {
-  VoidCallback _onTap;
+  VoidCallback? _onTap;
 
   void dispose() {
     _onTap = null;
