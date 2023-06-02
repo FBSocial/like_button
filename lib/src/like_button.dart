@@ -396,7 +396,8 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
 
   void onTap() {
     if (_controller!.isAnimating || _likeCountController!.isAnimating) {
-      return;
+      //再次点击时,停止动画
+      _controller!.reset();
     }
     if (widget.onTap != null) {
       widget.onTap!(_isLiked ?? true).then((bool? isLiked) {
